@@ -1,0 +1,48 @@
+variable "env" {
+  type = string
+  default = ""
+}
+
+variable "region" {
+  type = string
+  default = ""
+}
+
+variable "github_oauth_token" {
+  type = string
+  default = ""
+}
+
+variable "github_repo" {
+  type = string
+  default = ""
+}
+
+variable "app_name" {
+  type = string
+  default = ""
+}
+
+variable "instance_type" {
+  type = string
+  default = ""
+}
+
+variable "cidr" {
+  type = string
+  default = ""
+}
+
+variable "public_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}
+
+variable "private_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}

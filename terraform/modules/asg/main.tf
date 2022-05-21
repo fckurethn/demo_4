@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "demo_asg" {
   max_size            = 2
   min_size            = 2
   target_group_arns   = [var.target_group_arns]
-  vpc_zone_identifier = var.public_subnets_ids
+  vpc_zone_identifier = var.private_subnets_ids
   launch_template {
     id      = aws_launch_template.demo_asg.id
     version = "$Latest"
@@ -20,14 +20,19 @@ data "aws_ami" "amazon_linux" {
 }
 
 resource "aws_launch_template" "demo_asg" {
-  name = "DemoASG"
+  name = "${var.env}-ASG"
 
   vpc_security_group_ids               = [aws_security_group.allowed_ports.id]
   image_id                             = data.aws_ami.amazon_linux.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type                        = var.instance_type
   key_name                             = "aws-main"
-  user_data                            = filebase64("./modules/asg/user_data.sh")
+  #user_data                            = filebase64("./modules/asg/user_data.sh")
+  user_data = "${base64encode(<<EOF
+#!/bin/bash
+echo ECS_CLUSTER=${var.env}-cluster >> /etc/ecs/ecs.config
+EOF
+)}"
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_agent.name
@@ -36,7 +41,7 @@ resource "aws_launch_template" "demo_asg" {
     resource_type = "instance"
 
     tags = {
-      Name = "Demo instance"
+      Name = "${var.env}-instance"
     }
   }
 }

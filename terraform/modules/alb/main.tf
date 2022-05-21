@@ -1,12 +1,12 @@
 resource "aws_alb" "tf_alb" {
-  name               = "myalb"
+  name               = "${var.env}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = var.public_subnets_ids
 
   tags = {
-    Name = "Demo ALB"
+    Name = "${var.env}-ALB"
   }
 }
 

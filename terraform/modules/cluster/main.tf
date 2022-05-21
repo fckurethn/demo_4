@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "demo" {
-  name                 = "demo"
+  name                 = "${var.env}-repository"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -15,19 +15,20 @@ resource "null_resource" "build" {
       region      = var.region
       ecr_url     = aws_ecr_repository.demo.repository_url
       registry_id = aws_ecr_repository.demo.registry_id
-      github_url  = var.github_url
+      github_repo  = var.github_repo
       app_tag     = var.app_tag
+      env = var.env
     }
   }
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "tf_cluster"
+  name = "${var.env}-cluster"
 }
 
 
 resource "aws_ecs_task_definition" "demo" {
-  family                   = "demo"
+  family                   = "${var.env}-td"
   requires_compatibilities = ["EC2"]
   network_mode             = "bridge"
   container_definitions    = data.template_file.task_definition_template.rendered
@@ -36,12 +37,13 @@ resource "aws_ecs_task_definition" "demo" {
 data "template_file" "task_definition_template" {
   template = templatefile("./modules/cluster/task_definition.json.tpl", {
     ecr_url = aws_ecr_repository.demo.repository_url,
-    app_tag = var.app_tag
+    app_tag = var.app_tag,
+    env = var.env
   })
 }
 
 resource "aws_ecs_service" "demo" {
-  name                 = "demo"
+  name                 = "${var.env}-ecs-service"
   cluster              = aws_ecs_cluster.ecs_cluster.id
   task_definition      = aws_ecs_task_definition.demo.arn
   desired_count        = 2

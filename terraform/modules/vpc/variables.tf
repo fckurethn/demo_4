@@ -1,5 +1,31 @@
+variable "env" {
+  type = string
+}
+
 variable "cidr" {
-  default = "10.0.0.0/16"
+  type = string
+}
+
+variable "public_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}
+variable "private_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}
+/*variable "public_subnets" {
+  type        = list(string)
+  default     = []
+}
+
+variable "private_subnets" {
+  type        = list(string)
+  default     = []
 }
 
 variable "public_subnets" {
@@ -29,7 +55,4 @@ variable "private_subnets" {
     }
   }
 }
-
-variable "environment" {
-  default = "demo"
-}
+*/
