@@ -1,40 +1,48 @@
 variable "env" {
-  type = string
+  type    = string
   default = ""
 }
 
-variable "region" {
+variable "app_tag" {
   type = string
+}
+
+variable "account_id" {
+  type = string
+}
+
+variable "region" {
+  type    = string
   default = ""
 }
 
 variable "github_oauth_token" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "github_repo" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "buildspec" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "app_name" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "instance_type" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "cidr" {
-  type = string
+  type    = string
   default = ""
 }
 

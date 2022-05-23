@@ -101,7 +101,7 @@ resource "aws_codebuild_project" "demo-pepe" {
     location            = var.github_repo
     git_clone_depth     = 1
     report_build_status = "true"
-    buildspec           = var.build_spec_file
+    buildspec           = var.buildspec
 
   }
 

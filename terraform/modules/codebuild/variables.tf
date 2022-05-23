@@ -38,7 +38,7 @@ variable "branch_pattern" {
   default = "main"
 }
 
-variable "build_spec_file" {
+variable "buildspec" {
   default = "buildspec.yml"
 }
 

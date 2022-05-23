@@ -4,8 +4,8 @@ resource "null_resource" "build" {
 
     environment = {
       region      = var.region
-      ecr_url     = aws_ecr_repository.demo.repository_url
-      registry_id = aws_ecr_repository.demo.registry_id
+      ecr_url     = var.repository_url
+      registry_id = var.registry_id
       github_repo = var.github_repo
       app_tag     = var.app_tag
       env         = var.env

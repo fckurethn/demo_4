@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = var.env == "prod" ? "mbabych-project-pepe-prod-terraform-state" : "mbabych-project-pepe-dev-terraform-state"
+    bucket = "mbabych-project-pepe-prod-terraform-state"
     key    = "terraform.tfstate"
     region = "eu-central-1"
   }
@@ -25,7 +25,7 @@ module "asg" {
   instance_type       = var.instance_type
   env                 = var.env
   vpc_id              = module.vpc.vpc_id
-  target_group_arns   = module.alb.target_group_arns
+  target_group_arns   = module.cluster.target_group_arns
   private_subnets_ids = module.vpc.private_subnets_ids
 
   depends_on = [module.vpc]
@@ -34,10 +34,10 @@ module "asg" {
 module "cluster" {
   source = "./modules/cluster"
 
-  env                 = var.env
-  region              = var.region
-  github_repo         = var.github_repo
-  tf_tg_arn           = module.alb.target_group_arns
+  env         = var.env
+  region      = var.region
+  github_repo = var.github_repo
+  #  tf_tg_arn           = module.alb.target_group_arns
   public_subnets_ids  = module.vpc.public_subnets_ids
   private_subnets_ids = module.vpc.private_subnets_ids
   vpc_id              = module.vpc.vpc_id
@@ -46,8 +46,8 @@ module "cluster" {
 }
 
 module "init-build" {
-  source = "./modules/init-build"
-
+  source         = "./modules/init-build"
+  account_id     = var.account_id
   region         = var.region
   github_repo    = var.github_repo
   app_tag        = var.app_tag
