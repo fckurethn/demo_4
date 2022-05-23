@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "demo" {
 }
 
 data "template_file" "task_definition_template" {
-  template = templatefile("./modules/cluster/task_definition.json.tpl", {
+  template = templatefile("./task_definition.json.tpl", {
     ecr_url = aws_ecr_repository.demo.repository_url,
     app_tag = var.app_tag,
     env     = var.env
