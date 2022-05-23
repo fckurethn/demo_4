@@ -18,6 +18,11 @@ variable "github_repo" {
   default = ""
 }
 
+variable "buildspec" {
+  type = string
+  default = ""
+}
+
 variable "app_name" {
   type = string
   default = ""

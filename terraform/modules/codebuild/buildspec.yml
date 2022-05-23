@@ -1,0 +1,38 @@
+version: 0.2
+env:
+  variables:
+    TF_VERSION: "1.1.7"
+
+phases:
+  pre_build:
+    commands:
+      - REPOSITORY_URI=${ECR_APP_URL}
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - TIMESTAMP=$(TZ="Europe/Zaporozhye" date +"%d.%m.%y_%H.%M")
+      - IMAGE_TAG=${ENV}-${COMMIT_HASH:=latest-codebuild}-${TIMESTAMP}
+      - cd /usr/local/bin
+      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+      - unzip -o terraform.zip
+      - chmod +x terraform
+      - pip install jq
+  build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG "$CODEBUILD_SRC_DIR"/app
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "$TASK_DEFINITION_FAMILY" --region "$AWS_REGION")
+      - NEW_TASK_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "image:tag" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+      - NEW_TASK_INFO=$(aws ecs register-task-definition --region "$AWS_REGION" --cli-input-json "$NEW_TASK_DEFINTIION")
+      - NEW_REVISION=$(echo $NEW_TASK_INFO | jq '.taskDefinition.revision')
+      - aws ecs update-service --cluster ${TASK_DEFINITION_CLUSTER} --service ${TASK_DEFINITION_SERVICE} --task-definition ${TASK_DEFINITION_FAMILY}:${NEW_REVISION}
+      - echo Build completed on `date`
+      - echo "Updating Infrastructure..."
+      - cd "$CODEBUILD_SRC_DIR"/terraform/
+      - terraform init
+      - terraform apply --auto-approve

@@ -1,8 +1,16 @@
+variable "account_id" {
+  type = string
+}
+
 variable "region" {
   type = string
 }
 
 variable "env" {
+  type = string
+}
+
+variable "repository_url" {
   type = string
 }
 
@@ -32,4 +40,16 @@ variable "branch_pattern" {
 
 variable "build_spec_file" {
   default = "buildspec.yml"
+}
+
+variable "task_definition_family" {
+  type = string
+}
+
+variable "task_definition_cluster" {
+  type = string
+}
+
+variable "task_definition_service" {
+  type = string
 }

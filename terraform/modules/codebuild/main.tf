@@ -62,41 +62,55 @@ resource "aws_codebuild_project" "demo-pepe" {
   }
 
   environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/standard:4.0"
-    type                        = "LINUX_CONTAINER"
+    compute_type    = "BUILD_GENERAL1_SMALL"
+    image           = "aws/codebuild/standard:4.0"
+    type            = "LINUX_CONTAINER"
     privileged_mode = true
-/*
 
-  logs_config {
-    cloudwatch_logs {
-      group_name  = "log-group"
-      stream_name = "log-stream"
+    environment_variable {
+      name  = "ENV"
+      value = var.env
     }
-
-    s3_logs {
-      status   = "ENABLED"
-      location = "${aws_s3_bucket.demo-pepe-frog.id}/build-log"
+    environment_variable {
+      name  = "AWS_REGION"
+      value = var.region
+    }
+    environment_variable {
+      name  = "AWS_ACCOUNT_ID"
+      value = var.account_id
+    }
+    environment_variable {
+      name  = "ECR_APP_URL"
+      value = var.repository_url
+    }
+    environment_variable {
+      name  = "TASK_DEFINITION_FAMILY"
+      value = var.task_definition_family
+    }
+    environment_variable {
+      name  = "TASK_DEFINITION_CLUSTER"
+      value = var.task_definition_cluster
+    }
+    environment_variable {
+      name  = "TASK_DEFINITION_SERVICE"
+      value = var.task_definition_service
     }
   }
-*/
-}
-
   source {
-    type            = "GITHUB"
-    location        = var.github_repo
-    git_clone_depth = 1
+    type                = "GITHUB"
+    location            = var.github_repo
+    git_clone_depth     = 1
     report_build_status = "true"
-    buildspec = var.build_spec_file
+    buildspec           = var.build_spec_file
 
   }
 
   vpc_config {
-  vpc_id = var.vpc_id
+    vpc_id = var.vpc_id
 
     subnets = var.private_subnets_ids
 
-    security_group_ids = [ aws_security_group.codebuild_sg.id ]
+    security_group_ids = [aws_security_group.codebuild_sg.id]
   }
 
   tags = {
@@ -109,12 +123,12 @@ resource "aws_codebuild_webhook" "demo_webhook" {
 
   filter_group {
     filter {
-      type = "EVENT"
+      type    = "EVENT"
       pattern = var.git_trigger_event
     }
 
     filter {
-      type = "HEAD_REF"
+      type    = "HEAD_REF"
       pattern = var.branch_pattern
     }
   }

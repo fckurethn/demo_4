@@ -7,25 +7,9 @@ resource "aws_ecr_repository" "demo" {
   }
 }
 
-resource "null_resource" "build" {
-  provisioner "local-exec" {
-    command = "./modules/cluster/build.sh"
-
-    environment = {
-      region      = var.region
-      ecr_url     = aws_ecr_repository.demo.repository_url
-      registry_id = aws_ecr_repository.demo.registry_id
-      github_repo  = var.github_repo
-      app_tag     = var.app_tag
-      env = var.env
-    }
-  }
-}
-
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.env}-cluster"
 }
-
 
 resource "aws_ecs_task_definition" "demo" {
   family                   = "${var.env}-td"
@@ -38,7 +22,7 @@ data "template_file" "task_definition_template" {
   template = templatefile("./modules/cluster/task_definition.json.tpl", {
     ecr_url = aws_ecr_repository.demo.repository_url,
     app_tag = var.app_tag,
-    env = var.env
+    env     = var.env
   })
 }
 
@@ -50,7 +34,7 @@ resource "aws_ecs_service" "demo" {
   force_new_deployment = true
 
   load_balancer {
-    target_group_arn = var.tf_tg_arn
+    target_group_arn = aws_alb_target_group.tf_tg.arn
     container_name   = aws_ecs_task_definition.demo.family
     container_port   = 5000
   }
