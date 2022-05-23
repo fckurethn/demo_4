@@ -33,6 +33,6 @@ phases:
       - aws ecs update-service --cluster ${TASK_DEFINITION_CLUSTER} --service ${TASK_DEFINITION_SERVICE} --task-definition ${TASK_DEFINITION_FAMILY}:${NEW_REVISION}
       - echo Build completed on `date`
       - echo "Updating Infrastructure..."
-      - cd "$CODEBUILD_SRC_DIR"/terraform/
+      - cd "$CODEBUILD_SRC_DIR"/terraform/modules/cluster-updater
       - terraform init
-      - terraform apply --auto-approve
+      - terraform apply -var="env=prod" -var="app_tag=${IMAGE_TAG}" --auto-approve
