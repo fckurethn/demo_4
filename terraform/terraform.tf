@@ -8,8 +8,9 @@ terraform {
     encrypt = true
     bucket  = "mbabych-pepe-prod-eu-central-1"
     #    bucket  = "mbabych-pepe-dev-eu-central-1"
-    region = "eu-central-1"
-    key    = "state"
+    region         = "eu-central-1"
+    key            = "terraform.tfstate"
+    dynamodb_table = "terraform_state_eu_central_1"
   }
 
   /*  required_providers {

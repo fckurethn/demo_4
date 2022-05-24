@@ -1,3 +1,4 @@
+/*
 data "aws_iam_policy_document" "ecs_agent" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -60,13 +61,13 @@ resource "aws_iam_role_policy_attachment" "ecs" {
   role       = aws_iam_role.ecs_agent.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
-
+*/
 
 #============================================================================
 #============================================================================
 
-/*
-data "aws_iam_policy_document" "ecs_task_execution_role" {
+
+data "aws_iam_policy_document" "ecs_agent" {
   version = "2012-10-17"
   statement {
     sid     = ""
@@ -80,12 +81,12 @@ data "aws_iam_policy_document" "ecs_task_execution_role" {
   }
 }
 
-resource "aws_iam_role" "ecs_task_execution_role" {
+resource "aws_iam_role" "ecs_agent" {
   name               = "${var.app_name}-${var.env}-${var.ecs_task_execution_role_name}"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
 }
 
-resource "aws_iam_role_policy" "ecs_task_execution_role" {
+resource "aws_iam_role_policy" "ecs_agent" {
   name_prefix = "ecs_iam_role_policy"
   role        = aws_iam_role.ecs_task_execution_role.id
   policy      = data.template_file.ecs_service_policy.rendered
@@ -199,4 +200,3 @@ resource "aws_iam_role_policy" "ecs_task_role" {
 }
 EOF
 }
-*/
