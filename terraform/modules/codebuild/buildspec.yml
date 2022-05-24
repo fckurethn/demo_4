@@ -35,5 +35,5 @@ phases:
       - echo "Updating Infrastructure..."
       - cd "$CODEBUILD_SRC_DIR"/terraform
       - terraform init
-      - terraform plan -target=module.cluster --var-file="./${ENV}.tfvars" -var="image_tag=${TAG}"
-      - terraform apply -target=module.cluster --var-file=./${ENV}.tfvars -var="env=prod" -var="app_tag=${IMAGE_TAG}" --auto-approve
+      - terraform plan -target=module.cluster --var-file="./${ENV}.tfvars" -var="app_tag=${TAG}"
+      - terraform apply -target=module.cluster --var-file=./${ENV}.tfvars -var="env=${ENV}" -var="app_tag=${IMAGE_TAG}" --auto-approve
