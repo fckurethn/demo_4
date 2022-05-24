@@ -103,14 +103,14 @@ resource "aws_iam_role_policy" "cobebuild_policy" {
       "Action": [
         "secretsmanager:*"
       ],
-      "Resource": "arn:aws:secretsmanager:${local.region}:*:secret:*"
+      "Resource": "arn:aws:secretsmanager:${var.region}:*:secret:*"
     },
     {
       "Effect": "Allow",
       "Action": [
         "ssm:GetParameters"
       ],
-      "Resource": "arn:aws:ssm:${local.region}:*:parameter*"
+      "Resource": "arn:aws:ssm:${var.region}:*:parameter*"
     },
     {
       "Effect": "Allow",
@@ -158,7 +158,7 @@ resource "aws_iam_role_policy" "cobebuild_policy" {
       "Condition": {
         "StringLike": {
           "ec2:Subnet": [
-            "arn:aws:ec2:${var..region}:*:subnet/*"
+            "arn:aws:ec2:${var.region}:*:subnet/*"
           ],
           "ec2:AuthorizedService": "codebuild.amazonaws.com"
         }

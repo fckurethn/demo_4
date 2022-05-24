@@ -1,5 +1,4 @@
-/*
-data "aws_iam_policy_document" "ecs_agent" {
+/*data "aws_iam_policy_document" "ecs_agent" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -19,6 +18,7 @@ resource "aws_iam_instance_profile" "ecs_agent" {
   name = "ecs-agent"
   role = aws_iam_role.ecs_agent.name
 }
+
 
 resource "aws_iam_role_policy" "ecs_agent" {
   name_prefix = "ecs_iam_role_policy"
@@ -83,12 +83,17 @@ data "aws_iam_policy_document" "ecs_agent" {
 
 resource "aws_iam_role" "ecs_agent" {
   name               = "${var.app_name}-${var.env}-${var.ecs_task_execution_role_name}"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_agent.json
+}
+
+resource "aws_iam_instance_profile" "ecs_agent" {
+  name = "ecs-agent"
+  role = aws_iam_role.ecs_agent.name
 }
 
 resource "aws_iam_role_policy" "ecs_agent" {
   name_prefix = "ecs_iam_role_policy"
-  role        = aws_iam_role.ecs_task_execution_role.id
+  role        = aws_iam_role.ecs_agent.id
   policy      = data.template_file.ecs_service_policy.rendered
 }
 
