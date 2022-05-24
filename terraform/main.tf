@@ -14,8 +14,8 @@ module "vpc" {
 }
 
 module "cluster" {
-  source = "./modules/cluster"
-
+  source              = "./modules/cluster"
+  app_name            = var.app_name
   env                 = var.env
   region              = var.region
   vpc_id              = module.vpc.vpc_id
@@ -44,6 +44,7 @@ module "codebuild" {
   source = "./modules/codebuild"
 
   account_id              = var.account_id
+  app_name                = var.app_name
   region                  = var.region
   env                     = var.env
   vpc_id                  = module.vpc.vpc_id

@@ -50,7 +50,7 @@ resource "aws_codebuild_project" "demo-pepe" {
   name          = "demo-pepe"
   description   = "test_codebuild_project"
   build_timeout = "5"
-  service_role  = aws_iam_role.pepe-demo.arn
+  service_role  = aws_iam_role.codebuild_role.arn
 
   artifacts {
     type = "NO_ARTIFACTS"

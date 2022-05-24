@@ -2,6 +2,10 @@ variable "region" {
   type = string
 }
 
+variable "app_name" {
+  type = string
+}
+
 variable "env" {
   type = string
 }
@@ -26,4 +30,9 @@ variable "target_port" {
 
 variable "instance_type" {
   type = string
+}
+
+variable "ecs_task_execution_role_name" {
+  description = "ECS task execution role name"
+  default     = "TaskExecutionRole"
 }

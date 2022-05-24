@@ -12,7 +12,9 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "demo" {
-  family                   = "${var.env}-td"
+  family = "${var.env}-td"
+  #  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  #  task_role_arn            = aws_iam_role.ecs_task_role.arn
   requires_compatibilities = ["EC2"]
   network_mode             = "bridge"
   container_definitions    = data.template_file.task_definition_template.rendered
