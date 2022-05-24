@@ -73,6 +73,6 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name = "${env}-alb-security-group"
+    Name = "${var.env} ALB security group "
   }
 }

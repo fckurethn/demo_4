@@ -1,6 +1,8 @@
-provider "aws" {
-  region = var.region
+module "s3_terraform_state" {
+  source      = "./modules/s3"
+  bucket_name = var.bucket_name
 }
+
 
 module "cluster" {
   source = "./modules/cluster"
@@ -13,7 +15,7 @@ module "cluster" {
   instance_type   = var.instance_type
   github_repo     = var.github_repo
 
-  depends_on = [module.vpc]
+  #depends_on = [module.vpc]
 }
 
 module "init-build" {
@@ -35,9 +37,9 @@ module "codebuild" {
   account_id              = var.account_id
   region                  = var.region
   env                     = var.env
-  vpc_id                  = module.vpc.vpc_id
-  private_subnets_ids     = module.vpc.private_subnets_ids
-  public_subnets_ids      = module.vpc.public_subnets_ids
+  vpc_id                  = module.cluster.vpc_id
+  private_subnets_ids     = module.cluster.private_subnets_ids
+  public_subnets_ids      = module.cluster.public_subnets_ids
   repository_url          = module.cluster.repository_url
   github_repo             = var.github_repo
   github_oauth_token      = var.github_oauth_token
@@ -46,5 +48,5 @@ module "codebuild" {
   task_definition_cluster = module.cluster.task_definition_cluster
   task_definition_service = module.cluster.task_definition_service
 
-  depends_on = [module.vpc, module.cluster, module.init-build]
+  depends_on = [module.cluster, module.init-build]
 }

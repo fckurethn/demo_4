@@ -1,6 +1,7 @@
 env           = "prod"
 account_id    = "859431955366"
 region        = "eu-central-1"
+bucket_name   = "mbabych-pepe-prod-eu-central-1"
 github_repo   = "https://github.com/fckurethn/demo_4/"
 buildspec     = "./terraform/modules/codebuild/buildspec.yml"
 app_name      = "pepe-frog"

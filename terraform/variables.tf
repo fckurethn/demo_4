@@ -3,6 +3,11 @@ variable "env" {
   default = ""
 }
 
+variable "profile" {
+  type    = string
+  default = ""
+}
+
 variable "app_tag" {
   type = string
 }
@@ -14,6 +19,10 @@ variable "account_id" {
 variable "region" {
   type    = string
   default = ""
+}
+
+variable "bucket_name" {
+  type = string
 }
 
 variable "github_oauth_token" {

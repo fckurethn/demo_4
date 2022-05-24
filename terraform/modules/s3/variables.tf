@@ -2,6 +2,6 @@ variable "bucket_name" {
   type = string
 }
 
-variable "bucket_description" {
+/*variable "bucket_description" {
   type = string
-}
+}*/
