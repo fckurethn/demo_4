@@ -2,8 +2,8 @@ resource "aws_autoscaling_group" "demo_asg" {
   desired_capacity    = 2
   max_size            = 2
   min_size            = 2
-  target_group_arns   = [var.target_group_arns]
-  vpc_zone_identifier = var.private_subnets_ids
+  target_group_arns   = [aws_alb_target_group.tf_tg.arn]
+  vpc_zone_identifier = aws_subnet.private.*.id
   launch_template {
     id      = aws_launch_template.demo_asg.id
     version = "$Latest"
@@ -27,12 +27,11 @@ resource "aws_launch_template" "demo_asg" {
   instance_initiated_shutdown_behavior = "terminate"
   instance_type                        = var.instance_type
   key_name                             = "aws-main"
-  #user_data                            = filebase64("./modules/asg/user_data.sh")
   user_data = "${base64encode(<<EOF
 #!/bin/bash
 echo ECS_CLUSTER=${var.env}-cluster >> /etc/ecs/ecs.config
 EOF
-)}"
+  )}"
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_agent.name
@@ -49,7 +48,7 @@ EOF
 resource "aws_security_group" "allowed_ports" {
   name        = "allowed ports"
   description = "ports that needed for work"
-  vpc_id      = var.vpc_id
+  vpc_id      = aws_vpc.tf_vpc.id
 
   ingress {
     from_port   = 0

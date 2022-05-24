@@ -3,7 +3,7 @@ resource "aws_alb" "tf_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
-  subnets            = var.public_subnets_ids
+  subnets            = aws_subnet.public.*.id
 
   tags = {
     Name = "${var.env}-ALB"
@@ -13,7 +13,7 @@ resource "aws_alb" "tf_alb" {
 resource "aws_alb_target_group" "tf_tg" {
   port     = 80
   protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  vpc_id   = aws_vpc.tf_vpc.id
 
   health_check {
     healthy_threshold   = "3"
@@ -56,7 +56,7 @@ resource "aws_alb_listener_rule" "asg-listener_rule" {
 }
 
 resource "aws_security_group" "alb" {
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.tf_vpc.id
   name   = "alb security group"
 
   ingress {
@@ -73,6 +73,6 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name = "alb security group"
+    Name = "${env}-alb-security-group"
   }
 }

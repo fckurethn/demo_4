@@ -2,45 +2,16 @@ provider "aws" {
   region = var.region
 }
 
-terraform {
-  backend "s3" {
-    bucket = "mbabych-project-pepe-prod-terraform-state"
-    key    = "terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
-
-module "vpc" {
-  source = "./modules/vpc/"
-
-  env             = var.env
-  cidr            = var.cidr
-  private_subnets = var.private_subnets
-  public_subnets  = var.public_subnets
-}
-
-module "asg" {
-  source = "./modules/asg"
-
-  instance_type       = var.instance_type
-  env                 = var.env
-  vpc_id              = module.vpc.vpc_id
-  target_group_arns   = module.cluster.target_group_arns
-  private_subnets_ids = module.vpc.private_subnets_ids
-
-  depends_on = [module.vpc]
-}
-
 module "cluster" {
   source = "./modules/cluster"
 
-  env         = var.env
-  region      = var.region
-  github_repo = var.github_repo
-  #  tf_tg_arn           = module.alb.target_group_arns
-  public_subnets_ids  = module.vpc.public_subnets_ids
-  private_subnets_ids = module.vpc.private_subnets_ids
-  vpc_id              = module.vpc.vpc_id
+  env             = var.env
+  region          = var.region
+  cidr            = var.cidr
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
+  instance_type   = var.instance_type
+  github_repo     = var.github_repo
 
   depends_on = [module.vpc]
 }

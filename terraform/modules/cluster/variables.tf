@@ -14,14 +14,27 @@ variable "app_tag" {
   default = "v1"
 }
 
-# variable "tf_tg_arn" {}
-
 variable "target_port" {
   default = 80
 }
 
-variable "vpc_id" {}
+variable "instance_type" {
+  type = string
+}
 
-variable "public_subnets_ids" {}
+variable "cidr" {
+  type = string
+}
 
-variable "private_subnets_ids" {}
+variable "public_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}
+variable "private_subnets" {
+  type = map(object({
+    az   = string
+    cidr = string
+  }))
+}

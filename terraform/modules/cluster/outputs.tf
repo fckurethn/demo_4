@@ -26,3 +26,18 @@ output "alb_dns_name" {
   value       = aws_alb.tf_alb.dns_name
   description = "Domain name ALB"
 }
+
+output "security_group_id" {
+  value = aws_security_group.allowed_ports.id
+}
+
+output "vpc_id" {
+  value = aws_vpc.tf_vpc.id
+}
+
+output "public_subnets_ids" {
+  value = values(aws_subnet.public)[*].id
+}
+output "private_subnets_ids" {
+  value = values(aws_subnet.private)[*].id
+}
