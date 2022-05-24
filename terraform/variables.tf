@@ -17,8 +17,7 @@ variable "account_id" {
 }
 
 variable "region" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "bucket_name" {

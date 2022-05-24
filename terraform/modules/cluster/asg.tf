@@ -3,11 +3,12 @@ resource "aws_autoscaling_group" "demo_asg" {
   max_size            = 2
   min_size            = 2
   target_group_arns   = [aws_alb_target_group.tf_tg.arn]
-  vpc_zone_identifier = aws_subnet.private.*.id
+  vpc_zone_identifier = var.public_subnets_ids
   launch_template {
     id      = aws_launch_template.demo_asg.id
     version = "$Latest"
   }
+
 }
 
 data "aws_ami" "amazon_linux" {
@@ -48,7 +49,7 @@ EOF
 resource "aws_security_group" "allowed_ports" {
   name        = "allowed ports"
   description = "ports that needed for work"
-  vpc_id      = aws_vpc.tf_vpc.id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 0

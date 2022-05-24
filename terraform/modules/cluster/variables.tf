@@ -10,6 +10,12 @@ variable "github_repo" {
   type = string
 }
 
+variable "vpc_id" {}
+
+variable "public_subnets_ids" {}
+
+variable "private_subnets_ids" {}
+
 variable "app_tag" {
   default = "v1"
 }
@@ -20,21 +26,4 @@ variable "target_port" {
 
 variable "instance_type" {
   type = string
-}
-
-variable "cidr" {
-  type = string
-}
-
-variable "public_subnets" {
-  type = map(object({
-    az   = string
-    cidr = string
-  }))
-}
-variable "private_subnets" {
-  type = map(object({
-    az   = string
-    cidr = string
-  }))
 }
