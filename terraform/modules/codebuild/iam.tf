@@ -41,7 +41,8 @@ resource "aws_iam_role_policy" "cobebuild_policy" {
         "iam:GetRolePolicy",
         "iam:PassRole",
         "iam:ListInstanceProfilesForRole",
-        "iam:ListRolePolicies"
+        "iam:ListRolePolicies",
+        "iam:GetInstanceProfile"
       ],
       "Resource": "arn:aws:iam::*:role/*"
     },
